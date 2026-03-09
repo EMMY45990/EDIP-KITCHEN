@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — EDIP Kitchen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:  #FAF6EF;
+      --brown:  #3B1F0A;
+      --amber:  #C4762A;
+      --gold:   #E8A940;
+      --rust:   #A83A1A;
+      --text:   #2A1505;
+      --muted:  #7A5C3F;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 6%;
+      background: rgba(250,246,239,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(196,118,42,0.15);
+      animation: slideDown .6s ease forwards;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--brown); letter-spacing: .03em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--amber); }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; font-size: .85rem;
+      font-weight: 500; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    nav ul a:hover, nav ul a.active { color: var(--amber); }
+
+    /* ── PAGE HEADER BANNER ── */
+    .page-banner {
+      margin-top: 80px;
+      background: var(--brown);
+      padding: 4rem 9%;
+      position: relative; overflow: hidden;
+      animation: fadeIn .8s ease .1s both;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .page-banner::after {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,169,64,.18), transparent 70%);
+      pointer-events: none;
+    }
+    .page-banner .eyebrow {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: .7rem;
+    }
+    .page-banner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--cream); line-height: 1.2;
+    }
+    .page-banner h1 em { font-style: italic; color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2.5rem;
+      padding: 4rem 9%;
+      align-items: start;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .section-label {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--amber);
+      margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--brown);
+      margin-bottom: 2rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid rgba(196,118,42,.12);
+      border-radius: 8px; overflow: hidden;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      animation: fadeIn .6s ease both;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(59,31,10,.1);
+      border-color: rgba(196,118,42,.3);
+    }
+
+    .product-img-wrap {
+      position: relative; overflow: hidden;
+      height: 180px; background: var(--brown);
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform .5s;
+      filter: brightness(.92);
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.06); }
+
+    .product-badge {
+      position: absolute; top: .8rem; left: .8rem;
+      background: var(--amber); color: #fff;
+      font-size: .7rem; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .25rem .65rem; border-radius: 3px;
+    }
+
+    .product-body { padding: 1.2rem 1.3rem 1.4rem; }
+    .product-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--brown);
+      margin-bottom: .35rem;
+    }
+    .product-body p {
+      font-size: .85rem; line-height: 1.55;
+      color: var(--muted); margin-bottom: 1.1rem;
+    }
+    .product-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: .5rem;
+    }
+    .price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--rust);
+    }
+    .btn-add {
+      background: var(--brown); color: var(--cream);
+      border: none; cursor: pointer;
+      padding: .55rem 1.1rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem; font-weight: 500;
+      letter-spacing: .05em; text-transform: uppercase;
+      transition: background .25s, transform .2s;
+    }
+    .btn-add:hover { background: var(--rust); transform: scale(1.04); }
+    .btn-add:active { transform: scale(.97); }
+
+    /* Added feedback */
+    .btn-add.added { background: #2a6b3a; }
+
+    /* ── CART ── */
+    .cart-panel {
+      position: sticky; top: 100px;
+      background: var(--brown);
+      border-radius: 10px; padding: 1.8rem;
+      color: var(--cream);
+      animation: fadeIn .7s ease .3s both;
+    }
+    .cart-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.4rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(232,169,64,.2);
+    }
+    .cart-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; color: var(--gold);
+    }
+    .cart-count {
+      background: var(--amber); color: #fff;
+      font-size: .75rem; font-weight: 600;
+      min-width: 22px; height: 22px; border-radius: 50%;
+      display: grid; place-items: center;
+    }
+
+    .cart-empty {
+      text-align: center; padding: 2rem 0;
+      color: rgba(250,246,239,.4); font-size: .9rem;
+    }
+    .cart-empty span { display: block; font-size: 2rem; margin-bottom: .5rem; }
+
+    #cartItems { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+
+    .cart-item {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: .8rem;
+      padding: .75rem .9rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(232,169,64,.12);
+      border-radius: 6px;
+      animation: fadeIn .3s ease;
+    }
+    .cart-item-name { font-size: .9rem; font-weight: 500; flex: 1; }
+    .cart-item-price { font-size: .85rem; color: var(--gold); white-space: nowrap; }
+    .cart-item-remove {
+      background: none; border: none; cursor: pointer;
+      color: rgba(250,246,239,.35); font-size: 1rem;
+      transition: color .2s;
+    }
+    .cart-item-remove:hover { color: var(--rust); }
+
+    .cart-divider {
+      height: 1px; background: rgba(232,169,64,.2);
+      margin: 1.2rem 0;
+    }
+    .cart-total {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1.2rem;
+    }
+    .cart-total span { font-size: .85rem; color: rgba(250,246,239,.6); text-transform: uppercase; letter-spacing: .05em; }
+    .cart-total strong { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); }
+
+    .btn-checkout {
+      display: block; width: 100%; text-align: center;
+      background: var(--amber); color: #fff;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      padding: .9rem; border-radius: 5px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase;
+      transition: background .25s, transform .2s;
+    }
+    .btn-checkout:hover { background: var(--rust); transform: translateY(-2px); }
+    .btn-checkout:disabled { background: rgba(196,118,42,.3); cursor: not-allowed; transform: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1A0D03;
+      color: rgba(250,246,239,.5);
+      text-align: center;
+      padding: 2rem;
+      font-size: .85rem;
+      letter-spacing: .05em;
+      margin-top: 2rem;
+    }
+    footer strong { color: var(--gold); font-weight: 500; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .shop-layout { grid-template-columns: 1fr; }
+      .cart-panel { position: static; }
+      nav ul { display: none; }
+    }
+    @media (max-width: 520px) {
+      .product-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 380px) {
+      .product-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">EDIP <span>Kitchen</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE BANNER -->
+<div class="page-banner">
+  <p class="eyebrow">Fresh · Daily · Homemade</p>
+  <h1>Our <em>Popular</em> Foods</h1>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="shop-layout">
+
+  <!-- PRODUCTS -->
+  <section>
+    <p class="section-label">What we offer</p>
+    <h2 class="section-title">Browse & Add to Cart</h2>
+
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="images/cake.jpg" alt="Chocolate Cake">
+          <span class="product-badge">Best Seller</span>
+        </div>
+        <div class="product-body">
+          <h3>Chocolate Cake</h3>
+          <p>Soft and fluffy cake perfect for celebrations.</p>
+          <div class="product-footer">
+            <span class="price">₦10,000</span>
+            <button class="btn-add" onclick="addCart('Chocolate Cake', 10000, this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="images/meatpie.jpg" alt="Meat Pie">
+        </div>
+        <div class="product-body">
+          <h3>Meat Pie</h3>
+          <p>Golden crispy pie with a juicy, savoury filling.</p>
+          <div class="product-footer">
+            <span class="price">₦500</span>
+            <button class="btn-add" onclick="addCart('Meat Pie', 500, this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="images/chinchin.jpg" alt="Chin Chin">
+        </div>
+        <div class="product-body">
+          <h3>Chin-Chin</h3>
+          <p>Crunchy, golden Nigerian snack — hard to stop at one handful.</p>
+          <div class="product-footer">
+            <span class="price">₦2,500</span>
+            <button class="btn-add" onclick="addCart('Chin-Chin', 2500, this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="images/zobo.jpg" alt="Zobo Drink">
+        </div>
+        <div class="product-body">
+          <h3>Zobo Drink</h3>
+          <p>Refreshing chilled hibiscus drink, naturally sweetened.</p>
+          <div class="product-footer">
+            <span class="price">₦900</span>
+            <button class="btn-add" onclick="addCart('Zobo Drink', 900, this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CART PANEL -->
+  <aside class="cart-panel">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <div class="cart-empty" id="cartEmpty">
+      <span>🛒</span>
+      Nothing here yet.<br>Add something delicious!
+    </div>
+
+    <ul id="cartItems"></ul>
+
+    <div id="cartSummary" style="display:none">
+      <div class="cart-divider"></div>
+      <div class="cart-total">
+        <span>Total</span>
+        <strong id="total">₦0</strong>
+      </div>
+      <button class="btn-checkout" onclick="checkout()">Proceed to Order</button>
+    </div>
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>EDIP Kitchen</strong> · All rights reserved · Lagos, Nigeria</p>
+</footer>
+
+<script>
+  let cart = [];
+
+  function fmt(n) {
+    return '₦' + n.toLocaleString('en-NG');
+  }
+
+  function addCart(name, price, btn) {
+    cart.push({ name, price });
+    renderCart();
+
+    // Button feedback
+    const orig = btn.textContent;
+    btn.textContent = '✓ Added';
+    btn.classList.add('added');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('added');
+    }, 1200);
+  }
+
+  function removeItem(idx) {
+    cart.splice(idx, 1);
+    renderCart();
+  }
+
+  function renderCart() {
+    const list    = document.getElementById('cartItems');
+    const empty   = document.getElementById('cartEmpty');
+    const summary = document.getElementById('cartSummary');
+    const count   = document.getElementById('cartCount');
+    const total   = document.getElementById('total');
+
+    list.innerHTML = '';
+    count.textContent = cart.length;
+
+    if (cart.length === 0) {
+      empty.style.display = 'block';
+      summary.style.display = 'none';
+      return;
+    }
+
+    empty.style.display = 'none';
+    summary.style.display = 'block';
+
+    cart.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      li.innerHTML = `
+        <span class="cart-item-name">${item.name}</span>
+        <span class="cart-item-price">${fmt(item.price)}</span>
+        <button class="cart-item-remove" onclick="removeItem(${i})" title="Remove">✕</button>
+      `;
+      list.appendChild(li);
+    });
+
+    const sum = cart.reduce((a, c) => a + c.price, 0);
+    total.textContent = fmt(sum);
+  }
+
+  function checkout() {
+    window.location.href = 'order.html';
+  }
+</script>
+</body>
+</html>

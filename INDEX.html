@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDIP Kitchen — Homemade Nigerian Delicacies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #FAF6EF;
+      --brown:   #3B1F0A;
+      --amber:   #C4762A;
+      --gold:    #E8A940;
+      --rust:    #A83A1A;
+      --text:    #2A1505;
+      --muted:   #7A5C3F;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 6%;
+      background: rgba(250,246,239,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(196,118,42,0.15);
+      animation: slideDown .6s ease forwards;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--brown);
+      letter-spacing: .03em;
+    }
+    .logo span { color: var(--amber); }
+
+    nav ul { list-style: none; display: flex; gap: 2.2rem; }
+    nav ul a {
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: color .25s;
+    }
+    nav ul a:hover { color: var(--amber); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+    }
+
+    /* Left — text */
+    .hero-text {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 6% 5% 6% 9%;
+      animation: fadeLeft .9s ease .2s both;
+    }
+    @keyframes fadeLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+
+    .hero-eyebrow {
+      font-size: .8rem; font-weight: 500;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 1.2rem;
+    }
+    .hero-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 4.5vw, 4rem);
+      line-height: 1.15;
+      color: var(--brown);
+      margin-bottom: 1.4rem;
+    }
+    .hero-text h1 em { font-style: italic; color: var(--amber); }
+    .hero-text p {
+      font-size: 1.05rem; line-height: 1.7;
+      color: var(--muted); max-width: 38ch;
+      margin-bottom: 2.4rem;
+    }
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-block; text-decoration: none;
+      background: var(--brown); color: var(--cream);
+      padding: .85rem 2rem; border-radius: 3px;
+      font-size: .9rem; font-weight: 500; letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: background .25s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+
+    .btn-outline {
+      display: inline-block; text-decoration: none;
+      border: 1.5px solid var(--amber); color: var(--amber);
+      padding: .85rem 2rem; border-radius: 3px;
+      font-size: .9rem; font-weight: 500; letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: background .25s, color .25s, transform .2s;
+    }
+    .btn-outline:hover { background: var(--amber); color: #fff; transform: translateY(-2px); }
+
+    /* Right — slider */
+    .hero-slider {
+      position: relative; overflow: hidden;
+      background: var(--brown);
+      animation: fadeRight .9s ease .3s both;
+    }
+    @keyframes fadeRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+    .slider-track {
+      display: flex; height: 100%;
+      transition: transform .7s cubic-bezier(.77,0,.18,1);
+    }
+    .slide {
+      min-width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      filter: brightness(.88);
+    }
+
+    /* Slider nav dots */
+    .slider-dots {
+      position: absolute; bottom: 1.6rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: .6rem;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.4); border: none; cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .dot.active { background: var(--gold); transform: scale(1.3); }
+
+    /* Caption overlay */
+    .slide-caption {
+      position: absolute; bottom: 3.5rem; left: 2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.5);
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+
+    /* ── WHY US ── */
+    .why-us {
+      padding: 6rem 9%;
+      background: var(--brown);
+      color: var(--cream);
+    }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+    .section-header .eyebrow {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: .8rem;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .why-item {
+      padding: 2.2rem 1.8rem;
+      border: 1px solid rgba(232,169,64,.2);
+      border-radius: 6px;
+      transition: border-color .3s, transform .3s;
+      position: relative; overflow: hidden;
+    }
+    .why-item::before {
+      content: ''; position: absolute;
+      inset: 0; opacity: 0;
+      background: linear-gradient(135deg, rgba(196,118,42,.12), transparent);
+      transition: opacity .3s;
+    }
+    .why-item:hover { border-color: var(--gold); transform: translateY(-4px); }
+    .why-item:hover::before { opacity: 1; }
+
+    .why-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .why-item h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; margin-bottom: .6rem;
+      color: var(--gold);
+    }
+    .why-item p { font-size: .9rem; line-height: 1.65; color: rgba(250,246,239,.7); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1A0D03;
+      color: rgba(250,246,239,.5);
+      text-align: center;
+      padding: 2rem;
+      font-size: .85rem;
+      letter-spacing: .05em;
+    }
+    footer strong { color: var(--gold); font-weight: 500; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-slider { height: 55vw; min-height: 280px; }
+      .hero-text { padding: 3rem 6%; }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+      nav ul { display: none; }
+    }
+    @media (max-width: 520px) {
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">EDIP <span>Kitchen</span></div>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="products.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Lagos · Made with love</p>
+    <h1>Authentic Nigerian<br><em>Delicacies</em><br>at your door</h1>
+    <p>Fresh cakes, crunchy chin-chin, golden meat pies and chilled zobo — crafted daily from time-honoured recipes.</p>
+    <div class="btn-group">
+      <a href="products.html" class="btn-primary">Browse Menu</a>
+      <a href="#why-us" class="btn-outline">Our Story</a>
+    </div>
+  </div>
+
+  <div class="hero-slider">
+    <div class="slider-track" id="track">
+      <img class="slide" src="images/cake.jpg"     alt="Freshly baked cake">
+      <img class="slide" src="images/meatpie.jpg"  alt="Golden meat pie">
+      <img class="slide" src="images/chinchin.jpg" alt="Crunchy chin chin">
+      <img class="slide" src="images/zobo.jpg"     alt="Refreshing zobo drink">
+    </div>
+    <p class="slide-caption" id="caption">Freshly Baked Cake</p>
+    <div class="slider-dots" id="dots"></div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-us" id="why-us">
+  <div class="section-header">
+    <p class="eyebrow">Why choose us</p>
+    <h2>The EDIP Kitchen Difference</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="why-icon">🍰</div>
+      <h3>Freshly Made</h3>
+      <p>Every cake and snack is baked fresh each morning — no day-old batches, ever.</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">🥧</div>
+      <h3>Homemade Taste</h3>
+      <p>Authentic Nigerian recipes passed down through generations, made with care.</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">🚚</div>
+      <h3>Fast Delivery</h3>
+      <p>Same-day delivery across Lagos — your order arrives hot and fresh.</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">💰</div>
+      <h3>Affordable</h3>
+      <p>Premium homemade quality at prices that make sense for every budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>EDIP Kitchen</strong> · All rights reserved · Lagos, Nigeria</p>
+</footer>
+
+<script>
+  const track    = document.getElementById('track');
+  const dotsEl   = document.getElementById('dots');
+  const captionEl= document.getElementById('caption');
+  const captions = ['Freshly Baked Cake', 'Golden Meat Pie', 'Crunchy Chin Chin', 'Chilled Zobo Drink'];
+  const total    = captions.length;
+  let current    = 0, timer;
+
+  // Build dots
+  captions.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', `Slide ${i+1}`);
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(idx) {
+    current = (idx + total) % total;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    captionEl.style.opacity = 0;
+    setTimeout(() => { captionEl.textContent = captions[current]; captionEl.style.opacity = 1; }, 350);
+    document.querySelectorAll('.dot').forEach((d, i) =>
+      d.classList.toggle('active', i === current));
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), 3800);
+  }
+
+  resetTimer();
+</script>
+</body>
+</html>
