@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order — EDIP Kitchen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:  #FAF6EF;
+      --brown:  #3B1F0A;
+      --amber:  #C4762A;
+      --gold:   #E8A940;
+      --rust:   #A83A1A;
+      --text:   #2A1505;
+      --muted:  #7A5C3F;
+      --green:  #25D366;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 6%;
+      background: rgba(250,246,239,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(196,118,42,0.15);
+      animation: slideDown .6s ease forwards;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--brown); letter-spacing: .03em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--amber); }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; font-size: .85rem;
+      font-weight: 500; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    nav ul a:hover, nav ul a.active { color: var(--amber); }
+
+    /* ── BANNER ── */
+    .page-banner {
+      margin-top: 80px;
+      background: var(--brown);
+      padding: 4.5rem 9%;
+      position: relative; overflow: hidden;
+      animation: fadeUp .8s ease .1s both;
+    }
+    .page-banner::after {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,169,64,.15), transparent 70%);
+      pointer-events: none;
+    }
+    .page-banner .eyebrow {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .8rem;
+    }
+    .page-banner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      color: var(--cream); line-height: 1.2;
+    }
+    .page-banner h1 em { font-style: italic; color: var(--gold); }
+    .page-banner p {
+      margin-top: .9rem; font-size: .97rem;
+      color: rgba(250,246,239,.6); max-width: 46ch; line-height: 1.7;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── HOW IT WORKS ── */
+    .steps-strip {
+      background: var(--amber);
+      padding: 2.2rem 9%;
+      display: flex; gap: 0; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .step {
+      display: flex; align-items: center; gap: 1rem;
+      padding: .6rem 2rem;
+      border-right: 1px solid rgba(59,31,10,.15);
+      flex: 1; min-width: 180px;
+    }
+    .step:last-child { border-right: none; }
+    .step-num {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--brown); color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-weight: 700;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .step-text strong {
+      display: block; font-size: .85rem; font-weight: 600;
+      color: var(--brown); margin-bottom: .1rem;
+    }
+    .step-text span { font-size: .78rem; color: rgba(59,31,10,.65); }
+
+    /* ── MAIN LAYOUT ── */
+    .order-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 3rem;
+      padding: 4.5rem 9%;
+      align-items: start;
+    }
+
+    /* ── FORM ── */
+    .order-form-wrap { animation: fadeUp .8s ease .15s both; }
+
+    .form-eyebrow {
+      font-size: .78rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: .5rem;
+    }
+    .order-form-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      color: var(--brown); margin-bottom: 2rem;
+    }
+    .order-form-wrap h2 em { font-style: italic; color: var(--amber); }
+
+    /* Step sections */
+    .form-section {
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: #fff;
+      border: 1px solid rgba(196,118,42,.12);
+      border-radius: 10px;
+    }
+    .form-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--brown);
+      margin-bottom: 1.4rem;
+      padding-bottom: .8rem;
+      border-bottom: 1px solid rgba(196,118,42,.1);
+      display: flex; align-items: center; gap: .65rem;
+    }
+    .form-section-title span {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--brown); color: var(--gold);
+      font-size: .78rem; font-weight: 700;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1.1rem; }
+
+    label {
+      display: block; font-size: .76rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: .4rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid rgba(196,118,42,.18);
+      border-radius: 5px;
+      padding: .78rem 1rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .93rem;
+      outline: none;
+      transition: border-color .25s, background .25s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--amber);
+      background: #fff;
+    }
+    select option { background: #fff; }
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* Food picker */
+    .food-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: .7rem; margin-bottom: 1.2rem;
+    }
+    .food-option {
+      border: 1.5px solid rgba(196,118,42,.18);
+      border-radius: 8px; padding: .9rem .7rem;
+      text-align: center; cursor: pointer;
+      transition: border-color .2s, background .2s, transform .2s;
+      user-select: none;
+    }
+    .food-option:hover { border-color: var(--amber); transform: translateY(-2px); }
+    .food-option.selected {
+      border-color: var(--brown);
+      background: var(--brown); color: var(--cream);
+    }
+    .food-option .food-emoji { font-size: 1.6rem; display: block; margin-bottom: .35rem; }
+    .food-option .food-label { font-size: .82rem; font-weight: 500; }
+    .food-option .food-price { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+    .food-option.selected .food-price { color: var(--gold); }
+    .food-option.selected .food-label { color: var(--cream); }
+
+    /* Qty stepper */
+    .qty-stepper {
+      display: flex; align-items: center; gap: 0;
+      border: 1.5px solid rgba(196,118,42,.18);
+      border-radius: 5px; overflow: hidden;
+      width: fit-content;
+    }
+    .qty-btn {
+      background: var(--cream); border: none; cursor: pointer;
+      width: 40px; height: 40px; font-size: 1.2rem;
+      color: var(--amber); font-weight: 600;
+      transition: background .2s;
+    }
+    .qty-btn:hover { background: rgba(196,118,42,.1); }
+    .qty-display {
+      width: 50px; text-align: center;
+      font-weight: 600; font-size: 1rem; color: var(--brown);
+      border-left: 1.5px solid rgba(196,118,42,.18);
+      border-right: 1.5px solid rgba(196,118,42,.18);
+      padding: .5rem 0;
+    }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%; padding: 1rem;
+      background: var(--brown); color: var(--cream);
+      border: none; cursor: pointer;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      transition: background .25s, transform .2s;
+      margin-top: .5rem;
+    }
+    .btn-submit:hover { background: var(--rust); transform: translateY(-2px); }
+
+    /* Success */
+    .order-success {
+      display: none; text-align: center; padding: 3rem 1rem;
+    }
+    .success-icon {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: rgba(37,211,102,.12); border: 2px solid var(--green);
+      display: grid; place-items: center;
+      font-size: 1.8rem; margin: 0 auto 1.2rem;
+    }
+    .order-success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; color: var(--brown); margin-bottom: .5rem;
+    }
+    .order-success p { font-size: .92rem; color: var(--muted); line-height: 1.7; }
+    .order-success .whatsapp-follow {
+      display: inline-flex; align-items: center; gap: .7rem;
+      margin-top: 1.5rem;
+      background: var(--green); color: #fff;
+      text-decoration: none; padding: .85rem 1.8rem;
+      border-radius: 6px; font-weight: 600; font-size: .9rem;
+      transition: background .25s;
+    }
+    .order-success .whatsapp-follow:hover { background: #1ebe5b; }
+
+    /* ── ORDER SUMMARY PANEL ── */
+    .summary-panel {
+      position: sticky; top: 100px;
+      background: var(--brown);
+      border-radius: 10px; padding: 2rem;
+      color: var(--cream);
+      animation: fadeUp .8s ease .25s both;
+    }
+    .summary-panel h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; color: var(--gold);
+      margin-bottom: 1.2rem;
+      padding-bottom: .9rem;
+      border-bottom: 1px solid rgba(232,169,64,.2);
+    }
+
+    .summary-empty {
+      text-align: center; padding: 1.5rem 0;
+      color: rgba(250,246,239,.35); font-size: .88rem;
+    }
+    .summary-empty span { display: block; font-size: 2rem; margin-bottom: .4rem; }
+
+    .summary-items { display: flex; flex-direction: column; gap: .7rem; margin-bottom: 1.2rem; }
+    .summary-item {
+      display: flex; justify-content: space-between; align-items: center; gap: .5rem;
+      font-size: .9rem;
+    }
+    .summary-item-name { color: rgba(250,246,239,.8); }
+    .summary-item-val  { color: var(--gold); font-weight: 500; white-space: nowrap; }
+
+    .summary-divider {
+      height: 1px; background: rgba(232,169,64,.18); margin: 1rem 0;
+    }
+
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: .85rem; color: rgba(250,246,239,.55);
+      margin-bottom: .4rem;
+    }
+    .summary-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: .6rem;
+    }
+    .summary-total span { font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(250,246,239,.5); }
+    .summary-total strong {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: var(--gold);
+    }
+
+    .whatsapp-alt {
+      display: flex; align-items: center; gap: .7rem;
+      background: rgba(37,211,102,.15);
+      border: 1px solid rgba(37,211,102,.3);
+      border-radius: 7px; padding: 1rem;
+      text-decoration: none; color: var(--cream);
+      margin-top: 1.4rem;
+      transition: background .25s;
+    }
+    .whatsapp-alt:hover { background: rgba(37,211,102,.25); }
+    .whatsapp-alt svg { flex-shrink: 0; color: var(--green); }
+    .whatsapp-alt-text strong { display: block; font-size: .88rem; }
+    .whatsapp-alt-text small { font-size: .77rem; color: rgba(250,246,239,.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1A0D03; color: rgba(250,246,239,.5);
+      text-align: center; padding: 2rem;
+      font-size: .85rem; letter-spacing: .05em;
+    }
+    footer strong { color: var(--gold); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .order-layout { grid-template-columns: 1fr; }
+      .summary-panel { position: static; }
+      nav ul { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .steps-strip { flex-direction: column; gap: .5rem; }
+      .step { border-right: none; border-bottom: 1px solid rgba(59,31,10,.15); padding: .8rem 1rem; }
+      .step:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">EDIP <span>Kitchen</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="order.html" class="active">Order</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <p class="eyebrow">Fresh · Daily · Delivered</p>
+  <h1>Place Your <em>Order</em></h1>
+  <p>Fill in the form below and we'll confirm your order and arrange same-day delivery across Lagos.</p>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="steps-strip">
+  <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Fill the Form</strong><span>Choose your items & details</span></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-text"><strong>We Confirm</strong><span>You'll hear from us within 1 hr</span></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-text"><strong>We Deliver</strong><span>Fresh to your door in Lagos</span></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Enjoy!</strong><span>Dig in and savour every bite</span></div></div>
+</div>
+
+<!-- ORDER LAYOUT -->
+<div class="order-layout">
+
+  <!-- FORM -->
+  <div class="order-form-wrap">
+    <p class="form-eyebrow">Your order</p>
+    <h2>What would you <em>like?</em></h2>
+
+    <div id="orderForm">
+
+      <!-- Section 1: Your Details -->
+      <div class="form-section">
+        <div class="form-section-title"><span>1</span> Your Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" placeholder="e.g. Amaka">
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" placeholder="e.g. Obi">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+234 800 000 0000">
+        </div>
+      </div>
+
+      <!-- Section 2: Delivery -->
+      <div class="form-section">
+        <div class="form-section-title"><span>2</span> Delivery Address</div>
+        <div class="form-group">
+          <label for="address">Street Address</label>
+          <input type="text" id="address" placeholder="e.g. 12 Adeola Odeku Street">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="area">Area / Estate</label>
+            <input type="text" id="area" placeholder="e.g. Victoria Island">
+          </div>
+          <div class="form-group">
+            <label for="lga">LGA</label>
+            <select id="lga">
+              <option value="" disabled selected>Select LGA</option>
+              <option>Alimosho</option><option>Ajeromi-Ifelodun</option>
+              <option>Kosofe</option><option>Mushin</option>
+              <option>Oshodi-Isolo</option><option>Ojo</option>
+              <option>Ikorodu</option><option>Surulere</option>
+              <option>Agege</option><option>Ifako-Ijaiye</option>
+              <option>Shomolu</option><option>Amuwo-Odofin</option>
+              <option>Lagos Mainland</option><option>Ikeja</option>
+              <option>Eti-Osa</option><option>Lagos Island</option>
+              <option>Apapa</option><option>Badagry</option>
+              <option>Epe</option><option>Ibeju-Lekki</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Food -->
+      <div class="form-section">
+        <div class="form-section-title"><span>3</span> Choose Your Food</div>
+        <div class="food-picker" id="foodPicker">
+          <div class="food-option" onclick="selectFood(this, 'Chocolate Cake', 10000)">
+            <span class="food-emoji">🍰</span>
+            <div class="food-label">Chocolate Cake</div>
+            <div class="food-price">₦10,000</div>
+          </div>
+          <div class="food-option" onclick="selectFood(this, 'Meat Pie', 500)">
+            <span class="food-emoji">🥧</span>
+            <div class="food-label">Meat Pie</div>
+            <div class="food-price">₦500</div>
+          </div>
+          <div class="food-option" onclick="selectFood(this, 'Chin-Chin', 2500)">
+            <span class="food-emoji">🍘</span>
+            <div class="food-label">Chin-Chin</div>
+            <div class="food-price">₦2,500</div>
+          </div>
+          <div class="food-option" onclick="selectFood(this, 'Zobo Drink', 900)">
+            <span class="food-emoji">🍹</span>
+            <div class="food-label">Zobo Drink</div>
+            <div class="food-price">₦900</div>
+          </div>
+          <div class="food-option" onclick="selectFood(this, 'Cupcakes', 700)">
+            <span class="food-emoji">🧁</span>
+            <div class="food-label">Cupcakes</div>
+            <div class="food-price">₦700</div>
+          </div>
+          <div class="food-option" onclick="selectFood(this, 'Smoothie', 1800)">
+            <span class="food-emoji">🥤</span>
+            <div class="food-label">Smoothie</div>
+            <div class="food-price">₦1,800</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <div class="qty-stepper">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <div class="qty-display" id="qtyDisplay">1</div>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Note -->
+      <div class="form-section">
+        <div class="form-section-title"><span>4</span> Additional Notes</div>
+        <div class="form-group">
+          <label for="notes">Special requests, allergies, or delivery instructions</label>
+          <textarea id="notes" placeholder="e.g. No nuts please, call before delivery…"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="payment">Preferred Payment</label>
+          <select id="payment">
+            <option value="" disabled selected>Select payment method</option>
+            <option>Bank Transfer</option>
+            <option>Cash on Delivery</option>
+            <option>Pay via WhatsApp</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="submitOrder()">Place Order →</button>
+    </div>
+
+    <!-- Success state -->
+    <div class="order-success" id="orderSuccess">
+      <div class="success-icon">🎉</div>
+      <h3>Order Received!</h3>
+      <p>Thank you! We've received your order and will confirm it via email or phone within 1 hour.<br>For faster service, follow up on WhatsApp.</p>
+      <a class="whatsapp-follow" href="https://wa.me/2347060434899" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Follow up on WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- SUMMARY PANEL -->
+  <aside class="summary-panel">
+    <h3>Order Summary</h3>
+
+    <div class="summary-empty" id="summaryEmpty">
+      <span>🛒</span>Pick a food item<br>to see your summary
+    </div>
+
+    <div id="summaryContent" style="display:none">
+      <div class="summary-items">
+        <div class="summary-item"><span class="summary-item-name">Item</span><span class="summary-item-val" id="s-item">—</span></div>
+        <div class="summary-item"><span class="summary-item-name">Quantity</span><span class="summary-item-val" id="s-qty">—</span></div>
+        <div class="summary-item"><span class="summary-item-name">Unit Price</span><span class="summary-item-val" id="s-unit">—</span></div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span>Subtotal</span><span id="s-sub">—</span></div>
+      <div class="summary-row"><span>Delivery (Lagos)</span><span>₦500</span></div>
+      <div class="summary-divider"></div>
+      <div class="summary-total">
+        <span>Total</span>
+        <strong id="s-total">—</strong>
+      </div>
+    </div>
+
+    <a class="whatsapp-alt" href="https://wa.me/2347060434899" target="_blank" rel="noopener">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <div class="whatsapp-alt-text"><strong>Order via WhatsApp</strong><small>Faster · Direct · Confirmed instantly</small></div>
+    </a>
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>EDIP Kitchen</strong> · All rights reserved · Lagos, Nigeria</p>
+</footer>
+
+<script>
+  let selectedFood  = null;
+  let selectedPrice = 0;
+  let qty = 1;
+
+  function fmt(n) { return '₦' + n.toLocaleString('en-NG'); }
+
+  function selectFood(el, name, price) {
+    document.querySelectorAll('.food-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedFood  = name;
+    selectedPrice = price;
+    updateSummary();
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, qty + delta);
+    document.getElementById('qtyDisplay').textContent = qty;
+    updateSummary();
+  }
+
+  function updateSummary() {
+    if (!selectedFood) return;
+    const sub   = selectedPrice * qty;
+    const total = sub + 500;
+
+    document.getElementById('summaryEmpty').style.display   = 'none';
+    document.getElementById('summaryContent').style.display = 'block';
+
+    document.getElementById('s-item').textContent  = selectedFood;
+    document.getElementById('s-qty').textContent   = qty;
+    document.getElementById('s-unit').textContent  = fmt(selectedPrice);
+    document.getElementById('s-sub').textContent   = fmt(sub);
+    document.getElementById('s-total').textContent = fmt(total);
+  }
+
+  function submitOrder() {
+    const fname = document.getElementById('fname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const addr  = document.getElementById('address').value.trim();
+
+    if (!fname || !email || !phone) {
+      alert('Please fill in your name, email, and phone number.');
+      return;
+    }
+    if (!addr) {
+      alert('Please enter your delivery address.');
+      return;
+    }
+    if (!selectedFood) {
+      alert('Please choose a food item.');
+      return;
+    }
+
+    document.getElementById('orderForm').style.display    = 'none';
+    document.getElementById('orderSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>

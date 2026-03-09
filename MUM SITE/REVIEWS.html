@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviews — EDIP Kitchen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:  #FAF6EF;
+      --brown:  #3B1F0A;
+      --amber:  #C4762A;
+      --gold:   #E8A940;
+      --rust:   #A83A1A;
+      --text:   #2A1505;
+      --muted:  #7A5C3F;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 6%;
+      background: rgba(250,246,239,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(196,118,42,0.15);
+      animation: slideDown .6s ease forwards;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--brown); letter-spacing: .03em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--amber); }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; font-size: .85rem;
+      font-weight: 500; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    nav ul a:hover, nav ul a.active { color: var(--amber); }
+
+    /* ── BANNER ── */
+    .page-banner {
+      margin-top: 80px;
+      background: var(--brown);
+      padding: 4.5rem 9%;
+      position: relative; overflow: hidden;
+      animation: fadeUp .8s ease .1s both;
+    }
+    .page-banner::after {
+      content: '★';
+      font-size: 20rem; line-height: 1;
+      color: rgba(232,169,64,.05);
+      position: absolute; right: 4%; top: -1rem;
+      pointer-events: none;
+    }
+    .page-banner .eyebrow {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .8rem;
+    }
+    .page-banner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      color: var(--cream); line-height: 1.2;
+    }
+    .page-banner h1 em { font-style: italic; color: var(--gold); }
+    .page-banner p {
+      margin-top: .9rem; font-size: .97rem;
+      color: rgba(250,246,239,.6); max-width: 46ch; line-height: 1.7;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── RATING SUMMARY STRIP ── */
+    .rating-strip {
+      background: var(--amber);
+      padding: 2.5rem 9%;
+      display: flex; align-items: center;
+      gap: 3rem; flex-wrap: wrap;
+    }
+    .big-score {
+      text-align: center; flex-shrink: 0;
+    }
+    .big-score .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; font-weight: 700;
+      color: var(--brown); line-height: 1;
+    }
+    .big-score .stars { font-size: 1.3rem; letter-spacing: .1em; color: var(--brown); }
+    .big-score .count { font-size: .78rem; color: rgba(59,31,10,.6); margin-top: .3rem; }
+
+    .rating-bars { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: .55rem; }
+    .bar-row { display: flex; align-items: center; gap: .8rem; }
+    .bar-label { font-size: .82rem; font-weight: 500; color: var(--brown); width: 30px; text-align: right; flex-shrink: 0; }
+    .bar-track {
+      flex: 1; height: 8px; border-radius: 20px;
+      background: rgba(59,31,10,.15); overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 20px;
+      background: var(--brown);
+      transition: width 1s ease;
+    }
+    .bar-count { font-size: .78rem; color: rgba(59,31,10,.6); width: 24px; flex-shrink: 0; }
+
+    /* ── MAIN LAYOUT ── */
+    .reviews-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 3.5rem;
+      padding: 4.5rem 9%;
+      align-items: start;
+    }
+
+    /* ── REVIEWS LIST ── */
+    .reviews-col {}
+    .col-eyebrow {
+      font-size: .78rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: .5rem;
+    }
+    .col-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: var(--brown); margin-bottom: .5rem;
+    }
+    .col-sub { font-size: .88rem; color: var(--muted); margin-bottom: 2rem; }
+
+    /* Filter row */
+    .filter-row { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .filter-chip {
+      background: none; border: 1.5px solid rgba(196,118,42,.22);
+      color: var(--muted); border-radius: 50px;
+      padding: .38rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: .8rem; font-weight: 500; letter-spacing: .04em;
+      cursor: pointer; transition: all .2s;
+    }
+    .filter-chip:hover { border-color: var(--amber); color: var(--amber); }
+    .filter-chip.active { background: var(--brown); color: var(--cream); border-color: var(--brown); }
+
+    /* Review cards */
+    .reviews-list { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .review-card {
+      background: #fff;
+      border: 1px solid rgba(196,118,42,.12);
+      border-radius: 10px; padding: 1.6rem 1.8rem;
+      transition: border-color .25s, box-shadow .25s;
+      animation: fadeUp .6s ease both;
+    }
+    .review-card:nth-child(1) { animation-delay: .05s; }
+    .review-card:nth-child(2) { animation-delay: .1s; }
+    .review-card:nth-child(3) { animation-delay: .15s; }
+    .review-card:nth-child(4) { animation-delay: .2s; }
+    .review-card:nth-child(5) { animation-delay: .25s; }
+    .review-card:hover { border-color: rgba(196,118,42,.3); box-shadow: 0 6px 20px rgba(59,31,10,.07); }
+
+    .review-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 1rem;
+      margin-bottom: .9rem;
+    }
+    .reviewer { display: flex; align-items: center; gap: .85rem; }
+    .reviewer-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--brown);
+      display: grid; place-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .reviewer-name { font-weight: 600; font-size: .95rem; color: var(--brown); }
+    .reviewer-meta { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+
+    .review-right { text-align: right; flex-shrink: 0; }
+    .review-stars { font-size: 1rem; letter-spacing: .05em; color: var(--gold); }
+    .review-date { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+
+    .review-badge {
+      display: inline-block; font-size: .7rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      background: rgba(196,118,42,.1); color: var(--amber);
+      padding: .2rem .6rem; border-radius: 3px; margin-bottom: .7rem;
+    }
+
+    .review-text {
+      font-size: .92rem; line-height: 1.7; color: var(--muted);
+    }
+
+    /* ── WRITE A REVIEW FORM ── */
+    .form-panel {
+      position: sticky; top: 100px;
+      background: var(--brown);
+      border-radius: 10px; padding: 2.2rem;
+      animation: fadeUp .8s ease .2s both;
+    }
+    .form-panel h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; color: var(--gold);
+      margin-bottom: .35rem;
+    }
+    .form-panel > p {
+      font-size: .85rem; color: rgba(250,246,239,.5);
+      margin-bottom: 1.8rem; line-height: 1.6;
+    }
+
+    /* Star picker */
+    .star-picker { display: flex; gap: .3rem; margin-bottom: 1.3rem; flex-direction: row-reverse; justify-content: flex-end; }
+    .star-picker input { display: none; }
+    .star-picker label {
+      font-size: 1.8rem; cursor: pointer; color: rgba(250,246,239,.2);
+      transition: color .15s; text-transform: none; letter-spacing: 0;
+    }
+    .star-picker label:hover,
+    .star-picker label:hover ~ label,
+    .star-picker input:checked ~ label { color: var(--gold); }
+
+    .fp-group { margin-bottom: 1.1rem; }
+    .fp-label {
+      display: block; font-size: .75rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(250,246,239,.5); margin-bottom: .4rem;
+    }
+    .fp-input, .fp-select, .fp-textarea {
+      width: 100%;
+      background: rgba(255,255,255,.07);
+      border: 1.5px solid rgba(232,169,64,.2);
+      border-radius: 5px; padding: .75rem 1rem;
+      color: var(--cream); font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; outline: none;
+      transition: border-color .25s, background .25s;
+    }
+    .fp-input::placeholder, .fp-textarea::placeholder { color: rgba(250,246,239,.25); }
+    .fp-input:focus, .fp-select:focus, .fp-textarea:focus {
+      border-color: var(--gold); background: rgba(255,255,255,.1);
+    }
+    .fp-select option { background: var(--brown); }
+    .fp-textarea { resize: vertical; min-height: 100px; }
+
+    .btn-review {
+      width: 100%; padding: .9rem;
+      background: var(--amber); color: #fff;
+      border: none; cursor: pointer; border-radius: 5px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      margin-top: .4rem;
+      transition: background .25s, transform .2s;
+    }
+    .btn-review:hover { background: var(--rust); transform: translateY(-2px); }
+
+    /* Form success */
+    .form-success {
+      display: none; text-align: center; padding: 1.5rem 0;
+    }
+    .form-success .tick {
+      font-size: 2.5rem; margin-bottom: .8rem;
+    }
+    .form-success h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; color: var(--gold); margin-bottom: .4rem;
+    }
+    .form-success p { font-size: .85rem; color: rgba(250,246,239,.55); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1A0D03; color: rgba(250,246,239,.5);
+      text-align: center; padding: 2rem;
+      font-size: .85rem; letter-spacing: .05em;
+    }
+    footer strong { color: var(--gold); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .reviews-layout { grid-template-columns: 1fr; }
+      .form-panel { position: static; }
+      nav ul { display: none; }
+      .rating-strip { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">EDIP <span>Kitchen</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="reviews.html" class="active">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <p class="eyebrow">What our customers say</p>
+  <h1>Customer <em>Reviews</em></h1>
+  <p>Real feedback from real people across Lagos who've tasted and loved EDIP Kitchen.</p>
+</div>
+
+<!-- RATING SUMMARY -->
+<div class="rating-strip">
+  <div class="big-score">
+    <div class="num">4.8</div>
+    <div class="stars">★★★★★</div>
+    <div class="count">Based on 24 reviews</div>
+  </div>
+  <div class="rating-bars">
+    <div class="bar-row"><span class="bar-label">5★</span><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><span class="bar-count">19</span></div>
+    <div class="bar-row"><span class="bar-label">4★</span><div class="bar-track"><div class="bar-fill" style="width:17%"></div></div><span class="bar-count">4</span></div>
+    <div class="bar-row"><span class="bar-label">3★</span><div class="bar-track"><div class="bar-fill" style="width:4%"></div></div><span class="bar-count">1</span></div>
+    <div class="bar-row"><span class="bar-label">2★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-count">0</span></div>
+    <div class="bar-row"><span class="bar-label">1★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-count">0</span></div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="reviews-layout">
+
+  <!-- REVIEWS LIST -->
+  <div class="reviews-col">
+    <p class="col-eyebrow">Customer feedback</p>
+    <h2 class="col-title">What People Are Saying</h2>
+    <p class="col-sub">Showing 5 of 24 reviews</p>
+
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="filterReviews('all', this)">All</button>
+      <button class="filter-chip" onclick="filterReviews(5, this)">5 Stars</button>
+      <button class="filter-chip" onclick="filterReviews(4, this)">4 Stars</button>
+      <button class="filter-chip" onclick="filterReviews(3, this)">3 Stars</button>
+    </div>
+
+    <div class="reviews-list" id="reviewsList">
+
+      <div class="review-card" data-stars="5">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">A</div>
+            <div>
+              <div class="reviewer-name">Adaeze Nwosu</div>
+              <div class="reviewer-meta">Lagos Island · Verified Order</div>
+            </div>
+          </div>
+          <div class="review-right">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-date">March 2026</div>
+          </div>
+        </div>
+        <span class="review-badge">Chocolate Cake</span>
+        <p class="review-text">The cake was absolutely incredible — soft, moist, and tasted just like something my mum would bake. Ordered for my daughter's birthday and everyone kept asking where I got it from. Will definitely order again!</p>
+      </div>
+
+      <div class="review-card" data-stars="5">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">K</div>
+            <div>
+              <div class="reviewer-name">Kayode Fashola</div>
+              <div class="reviewer-meta">Surulere · Verified Order</div>
+            </div>
+          </div>
+          <div class="review-right">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-date">February 2026</div>
+          </div>
+        </div>
+        <span class="review-badge">Party Package</span>
+        <p class="review-text">Ordered the Party Package for my office event. The meat pies were fresh and hot on arrival, the zobo was perfectly chilled. My colleagues were impressed. Fast delivery too — arrived within 2 hours!</p>
+      </div>
+
+      <div class="review-card" data-stars="4">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">F</div>
+            <div>
+              <div class="reviewer-name">Funmilayo Adekunle</div>
+              <div class="reviewer-meta">Ikeja · Verified Order</div>
+            </div>
+          </div>
+          <div class="review-right">
+            <div class="review-stars">★★★★☆</div>
+            <div class="review-date">February 2026</div>
+          </div>
+        </div>
+        <span class="review-badge">Chin-Chin</span>
+        <p class="review-text">The chin-chin is the best I've had in Lagos — crunchy, not too sweet, and the portion is generous. Delivery took a bit longer than expected but the quality made up for it. Four stars from me!</p>
+      </div>
+
+      <div class="review-card" data-stars="5">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">C</div>
+            <div>
+              <div class="reviewer-name">Chidinma Okafor</div>
+              <div class="reviewer-meta">Victoria Island · Verified Order</div>
+            </div>
+          </div>
+          <div class="review-right">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-date">January 2026</div>
+          </div>
+        </div>
+        <span class="review-badge">Zobo Drink</span>
+        <p class="review-text">I've been ordering zobo from EDIP Kitchen every week. It's fresh, natural, not overly sweet and has that authentic homemade taste. The bottle is also nicely sealed. Highly recommend!</p>
+      </div>
+
+      <div class="review-card" data-stars="3">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">E</div>
+            <div>
+              <div class="reviewer-name">Emeka Eze</div>
+              <div class="reviewer-meta">Yaba · Verified Order</div>
+            </div>
+          </div>
+          <div class="review-right">
+            <div class="review-stars">★★★☆☆</div>
+            <div class="review-date">January 2026</div>
+          </div>
+        </div>
+        <span class="review-badge">Meat Pie</span>
+        <p class="review-text">Good flavour and the filling was tasty. The crust was a bit thicker than I like but overall still enjoyable. Would order again — maybe try a different item next time.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WRITE A REVIEW FORM -->
+  <aside class="form-panel">
+    <h3>Leave a Review</h3>
+    <p>Tried our food? Share your experience and help others decide.</p>
+
+    <div id="reviewForm">
+      <!-- Star picker -->
+      <div class="fp-group">
+        <span class="fp-label">Your Rating</span>
+        <div class="star-picker">
+          <input type="radio" id="s5" name="stars" value="5"><label for="s5">★</label>
+          <input type="radio" id="s4" name="stars" value="4"><label for="s4">★</label>
+          <input type="radio" id="s3" name="stars" value="3"><label for="s3">★</label>
+          <input type="radio" id="s2" name="stars" value="2"><label for="s2">★</label>
+          <input type="radio" id="s1" name="stars" value="1"><label for="s1">★</label>
+        </div>
+      </div>
+
+      <div class="fp-group">
+        <label class="fp-label" for="rname">Your Name</label>
+        <input class="fp-input" type="text" id="rname" placeholder="e.g. Amaka Obi">
+      </div>
+
+      <div class="fp-group">
+        <label class="fp-label" for="rarea">Your Area</label>
+        <input class="fp-input" type="text" id="rarea" placeholder="e.g. Lekki, Ikeja…">
+      </div>
+
+      <div class="fp-group">
+        <label class="fp-label" for="rfood">Food Ordered</label>
+        <select class="fp-select" id="rfood">
+          <option value="" disabled selected>Select item</option>
+          <option>Chocolate Cake</option>
+          <option>Meat Pie</option>
+          <option>Chin-Chin</option>
+          <option>Zobo Drink</option>
+          <option>Cupcakes</option>
+          <option>Smoothie</option>
+          <option>Party Package</option>
+          <option>Snack Box</option>
+          <option>Family Combo</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="fp-group">
+        <label class="fp-label" for="rtext">Your Review</label>
+        <textarea class="fp-textarea" id="rtext" placeholder="How was your experience? Tell us what you loved…"></textarea>
+      </div>
+
+      <button class="btn-review" onclick="submitReview()">Submit Review</button>
+    </div>
+
+    <div class="form-success" id="reviewSuccess">
+      <div class="tick">🌟</div>
+      <h4>Thank You!</h4>
+      <p>Your review has been received. We really appreciate you taking the time to share your experience.</p>
+    </div>
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>EDIP Kitchen</strong> · All rights reserved · Lagos, Nigeria</p>
+</footer>
+
+<script>
+  /* Filter */
+  function filterReviews(stars, btn) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.review-card').forEach(card => {
+      if (stars === 'all' || parseInt(card.dataset.stars) === stars) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  /* Submit */
+  function submitReview() {
+    const name  = document.getElementById('rname').value.trim();
+    const text  = document.getElementById('rtext').value.trim();
+    const food  = document.getElementById('rfood').value;
+    const stars = document.querySelector('input[name="stars"]:checked');
+
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!stars) { alert('Please select a star rating.'); return; }
+    if (!food)  { alert('Please select the food you ordered.'); return; }
+    if (!text)  { alert('Please write a short review.'); return; }
+
+    // Prepend new review to list
+    const starsVal = parseInt(stars.value);
+    const starStr  = '★'.repeat(starsVal) + '☆'.repeat(5 - starsVal);
+    const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.dataset.stars = starsVal;
+    card.style.borderColor = 'rgba(196,118,42,.35)';
+    card.innerHTML = `
+      <div class="review-header">
+        <div class="reviewer">
+          <div class="reviewer-avatar">${initials}</div>
+          <div>
+            <div class="reviewer-name">${name}</div>
+            <div class="reviewer-meta">Just now · Verified Order</div>
+          </div>
+        </div>
+        <div class="review-right">
+          <div class="review-stars">${starStr}</div>
+          <div class="review-date">March 2026</div>
+        </div>
+      </div>
+      <span class="review-badge">${food}</span>
+      <p class="review-text">${text}</p>
+    `;
+
+    const list = document.getElementById('reviewsList');
+    list.insertBefore(card, list.firstChild);
+
+    document.getElementById('reviewForm').style.display    = 'none';
+    document.getElementById('reviewSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>

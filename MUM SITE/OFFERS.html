@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offers — EDIP Kitchen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:  #FAF6EF;
+      --brown:  #3B1F0A;
+      --amber:  #C4762A;
+      --gold:   #E8A940;
+      --rust:   #A83A1A;
+      --text:   #2A1505;
+      --muted:  #7A5C3F;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 6%;
+      background: rgba(250,246,239,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(196,118,42,0.15);
+      animation: slideDown .6s ease forwards;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--brown); letter-spacing: .03em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--amber); }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; font-size: .85rem;
+      font-weight: 500; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    nav ul a:hover, nav ul a.active { color: var(--amber); }
+
+    /* ── BANNER ── */
+    .page-banner {
+      margin-top: 80px;
+      background: var(--brown);
+      padding: 4.5rem 9%;
+      position: relative; overflow: hidden;
+      animation: fadeUp .8s ease .1s both;
+    }
+    .page-banner::before {
+      content: '%';
+      font-family: 'Playfair Display', serif;
+      font-size: 22rem; line-height: 1;
+      color: rgba(232,169,64,.05);
+      position: absolute; right: 4%; top: -2rem;
+      pointer-events: none;
+    }
+    .page-banner::after {
+      content: '';
+      position: absolute; left: -80px; bottom: -80px;
+      width: 340px; height: 340px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,169,64,.12), transparent 65%);
+      pointer-events: none;
+    }
+    .page-banner .eyebrow {
+      font-size: .8rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .8rem;
+    }
+    .page-banner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      color: var(--cream); line-height: 1.2;
+    }
+    .page-banner h1 em { font-style: italic; color: var(--gold); }
+    .page-banner p {
+      margin-top: .9rem; font-size: .97rem;
+      color: rgba(250,246,239,.6); max-width: 44ch; line-height: 1.7;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── COUNTDOWN STRIP ── */
+    .countdown-strip {
+      background: var(--amber);
+      padding: 1rem 9%;
+      display: flex; align-items: center;
+      justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .countdown-strip p {
+      font-size: .88rem; font-weight: 500;
+      color: var(--brown); letter-spacing: .04em;
+    }
+    .countdown-strip p strong { font-weight: 700; }
+    .timer { display: flex; gap: .6rem; align-items: center; }
+    .time-block {
+      background: var(--brown); color: var(--gold);
+      border-radius: 5px; padding: .3rem .65rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; font-weight: 700;
+      min-width: 44px; text-align: center;
+      line-height: 1;
+    }
+    .time-block small {
+      display: block; font-family: 'DM Sans', sans-serif;
+      font-size: .58rem; font-weight: 400;
+      color: rgba(232,169,64,.7); text-transform: uppercase;
+      letter-spacing: .08em; margin-top: 2px;
+    }
+    .timer-sep { color: var(--brown); font-weight: 700; font-size: 1.1rem; }
+
+    /* ── OFFERS GRID ── */
+    .offers-section { padding: 4.5rem 9%; }
+
+    .section-label {
+      font-size: .78rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      color: var(--brown); margin-bottom: 2.5rem;
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .offer-card {
+      background: #fff;
+      border: 1px solid rgba(196,118,42,.12);
+      border-radius: 10px; overflow: hidden;
+      position: relative;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      animation: fadeUp .7s ease both;
+    }
+    .offer-card:nth-child(1) { animation-delay: .05s; }
+    .offer-card:nth-child(2) { animation-delay: .12s; }
+    .offer-card:nth-child(3) { animation-delay: .19s; }
+    .offer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(59,31,10,.1);
+      border-color: rgba(196,118,42,.3);
+    }
+
+    /* Top accent bar */
+    .offer-card::before {
+      content: ''; display: block;
+      height: 4px;
+    }
+    .offer-card.gold::before   { background: linear-gradient(90deg, var(--gold), var(--amber)); }
+    .offer-card.rust::before   { background: linear-gradient(90deg, var(--rust), #c0552a); }
+    .offer-card.brown::before  { background: linear-gradient(90deg, var(--brown), var(--muted)); }
+
+    /* Badge */
+    .offer-badge {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: var(--rust); color: #fff;
+      font-size: .72rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .3rem .75rem; border-radius: 3px;
+    }
+    .offer-card.gold .offer-badge { background: var(--gold); color: var(--brown); }
+
+    .offer-body { padding: 1.8rem 2rem 2rem; }
+
+    .offer-icon { font-size: 2.4rem; margin-bottom: .9rem; }
+
+    .offer-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; color: var(--brown);
+      margin-bottom: .5rem;
+    }
+    .offer-body > p {
+      font-size: .88rem; line-height: 1.65;
+      color: var(--muted); margin-bottom: 1.4rem;
+    }
+
+    /* Included items list */
+    .offer-includes {
+      list-style: none; margin-bottom: 1.6rem;
+      display: flex; flex-direction: column; gap: .45rem;
+    }
+    .offer-includes li {
+      display: flex; align-items: center; gap: .65rem;
+      font-size: .88rem; color: var(--text);
+    }
+    .offer-includes li::before {
+      content: '✓';
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(196,118,42,.12);
+      color: var(--amber); font-size: .75rem; font-weight: 700;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+
+    .offer-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(196,118,42,.1);
+    }
+    .offer-pricing {}
+    .original-price {
+      font-size: .82rem; color: var(--muted);
+      text-decoration: line-through; margin-bottom: .1rem;
+    }
+    .offer-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem; font-weight: 700; color: var(--rust);
+    }
+    .savings-tag {
+      font-size: .72rem; font-weight: 600;
+      color: #2a7a3b; background: rgba(42,122,59,.1);
+      padding: .2rem .55rem; border-radius: 20px;
+      margin-left: .4rem;
+    }
+
+    .btn-order {
+      background: var(--brown); color: var(--cream);
+      text-decoration: none; border: none; cursor: pointer;
+      padding: .7rem 1.4rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .82rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      white-space: nowrap;
+      transition: background .25s, transform .2s;
+    }
+    .btn-order:hover { background: var(--rust); transform: scale(1.03); }
+
+    /* ── PROMO CODE ── */
+    .promo-section {
+      background: var(--brown);
+      padding: 4rem 9%;
+      text-align: center;
+    }
+    .promo-section .eyebrow {
+      font-size: .78rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: .7rem;
+    }
+    .promo-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--cream); margin-bottom: .8rem;
+    }
+    .promo-section h2 em { font-style: italic; color: var(--gold); }
+    .promo-section > p {
+      font-size: .92rem; color: rgba(250,246,239,.55);
+      margin-bottom: 2rem; line-height: 1.7;
+    }
+
+    .promo-input-row {
+      display: flex; gap: .7rem; max-width: 420px; margin: 0 auto;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .promo-input-row input {
+      flex: 1; min-width: 180px;
+      background: rgba(255,255,255,.07);
+      border: 1.5px solid rgba(232,169,64,.25);
+      border-radius: 4px; padding: .8rem 1.1rem;
+      color: var(--cream); font-family: 'DM Sans', sans-serif;
+      font-size: .95rem; outline: none;
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: border-color .25s;
+    }
+    .promo-input-row input::placeholder { color: rgba(250,246,239,.3); letter-spacing: .05em; text-transform: none; }
+    .promo-input-row input:focus { border-color: var(--gold); }
+    .btn-apply {
+      background: var(--amber); color: #fff; border: none; cursor: pointer;
+      padding: .8rem 1.6rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .88rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      transition: background .25s, transform .2s;
+    }
+    .btn-apply:hover { background: var(--rust); transform: translateY(-2px); }
+
+    .promo-msg {
+      margin-top: .9rem; font-size: .88rem;
+      min-height: 1.2em;
+    }
+    .promo-msg.success { color: #5ecb7a; }
+    .promo-msg.error   { color: #e07070; }
+
+    /* ── CTA STRIP ── */
+    .cta-strip {
+      padding: 3.5rem 9%;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+    }
+    .cta-strip h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--brown); margin-bottom: .3rem;
+    }
+    .cta-strip h3 em { font-style: italic; color: var(--amber); }
+    .cta-strip p { font-size: .88rem; color: var(--muted); }
+    .btn-primary {
+      display: inline-block; text-decoration: none;
+      background: var(--brown); color: var(--cream);
+      padding: .9rem 2.2rem; border-radius: 4px;
+      font-size: .88rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+      white-space: nowrap;
+      transition: background .25s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--rust); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1A0D03;
+      color: rgba(250,246,239,.5);
+      text-align: center; padding: 2rem;
+      font-size: .85rem; letter-spacing: .05em;
+    }
+    footer strong { color: var(--gold); font-weight: 500; }
+
+    @media (max-width: 860px) {
+      nav ul { display: none; }
+      .cta-strip { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 520px) {
+      .offers-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">EDIP <span>Kitchen</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="offers.html" class="active">Offers</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- BANNER -->
+<div class="page-banner">
+  <p class="eyebrow">Limited time deals</p>
+  <h1>Special <em>Offers</em></h1>
+  <p>Bundle deals and exclusive packages — more food, better value. Order before they're gone.</p>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-strip">
+  <p><strong>🔥 Deals reset in:</strong></p>
+  <div class="timer">
+    <div class="time-block" id="t-hours">00<small>hrs</small></div>
+    <span class="timer-sep">:</span>
+    <div class="time-block" id="t-mins">00<small>min</small></div>
+    <span class="timer-sep">:</span>
+    <div class="time-block" id="t-secs">00<small>sec</small></div>
+  </div>
+</div>
+
+<!-- OFFERS -->
+<section class="offers-section">
+  <p class="section-label">This week's deals</p>
+  <h2 class="section-title">Choose Your Package</h2>
+
+  <div class="offers-grid">
+
+    <!-- Party Package -->
+    <div class="offer-card gold">
+      <span class="offer-badge">Most Popular</span>
+      <div class="offer-body">
+        <div class="offer-icon">🎉</div>
+        <h3>Party Package</h3>
+        <p>The perfect bundle for celebrations, get-togethers, and special occasions in Lagos.</p>
+        <ul class="offer-includes">
+          <li>12 freshly baked Meat Pies</li>
+          <li>1 Medium Celebration Cake</li>
+          <li>2 bottles of chilled Zobo Drink</li>
+        </ul>
+        <div class="offer-footer">
+          <div class="offer-pricing">
+            <div class="original-price">₦16,800</div>
+            <div class="offer-price">₦12,000 <span class="savings-tag">Save ₦4,800</span></div>
+          </div>
+          <a href="order.html" class="btn-order">Order Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snack Box -->
+    <div class="offer-card rust">
+      <span class="offer-badge">New</span>
+      <div class="offer-body">
+        <div class="offer-icon">📦</div>
+        <h3>Snack Box</h3>
+        <p>A curated box of our crunchiest, most-loved snacks — great for sharing or gifting.</p>
+        <ul class="offer-includes">
+          <li>1 large bag of Chin-Chin</li>
+          <li>6 Cupcakes (assorted flavours)</li>
+          <li>1 bottle of Fresh Juice</li>
+        </ul>
+        <div class="offer-footer">
+          <div class="offer-pricing">
+            <div class="original-price">₦6,500</div>
+            <div class="offer-price">₦4,800 <span class="savings-tag">Save ₦1,700</span></div>
+          </div>
+          <a href="order.html" class="btn-order">Order Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Family Combo -->
+    <div class="offer-card brown">
+      <span class="offer-badge">Best Value</span>
+      <div class="offer-body">
+        <div class="offer-icon">🏠</div>
+        <h3>Family Combo</h3>
+        <p>Everything your family needs for a satisfying weekend treat, all in one order.</p>
+        <ul class="offer-includes">
+          <li>1 Large Cake (any flavour)</li>
+          <li>8 Meat Pies</li>
+          <li>1 Smoothie + 1 Zobo Drink</li>
+          <li>1 bag of Cookies</li>
+        </ul>
+        <div class="offer-footer">
+          <div class="offer-pricing">
+            <div class="original-price">₦22,000</div>
+            <div class="offer-price">₦17,500 <span class="savings-tag">Save ₦4,500</span></div>
+          </div>
+          <a href="order.html" class="btn-order">Order Now</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROMO CODE -->
+<section class="promo-section">
+  <p class="eyebrow">Exclusive discount</p>
+  <h2>Have a <em>promo code?</em></h2>
+  <p>Enter your code below to unlock a special discount on your next order.</p>
+  <div class="promo-input-row">
+    <input type="text" id="promoInput" placeholder="Enter code e.g. EDIP10">
+    <button class="btn-apply" onclick="applyPromo()">Apply</button>
+  </div>
+  <p class="promo-msg" id="promoMsg"></p>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div>
+    <h3>Ready to <em>place an order?</em></h3>
+    <p>Go to our order page to customise and complete your purchase.</p>
+  </div>
+  <a href="order.html" class="btn-primary">Place an Order →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>EDIP Kitchen</strong> · All rights reserved · Lagos, Nigeria</p>
+</footer>
+
+<script>
+  /* ── Countdown: resets to midnight each day ── */
+  function updateTimer() {
+    const now  = new Date();
+    const end  = new Date();
+    end.setHours(23, 59, 59, 999);
+    const diff = end - now;
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('t-hours').innerHTML = String(h).padStart(2,'0') + '<small>hrs</small>';
+    document.getElementById('t-mins').innerHTML  = String(m).padStart(2,'0') + '<small>min</small>';
+    document.getElementById('t-secs').innerHTML  = String(s).padStart(2,'0') + '<small>sec</small>';
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+
+  /* ── Promo code ── */
+  const CODES = {
+    'EDIP10':   '10% discount applied! Use code at checkout.',
+    'WELCOME':  'Welcome discount unlocked — 5% off your first order!',
+    'PARTY':    'Party Package deal unlocked — ₦500 extra off!'
+  };
+
+  function applyPromo() {
+    const code = document.getElementById('promoInput').value.trim().toUpperCase();
+    const msg  = document.getElementById('promoMsg');
+
+    if (CODES[code]) {
+      msg.textContent = '🎉 ' + CODES[code];
+      msg.className = 'promo-msg success';
+    } else if (!code) {
+      msg.textContent = 'Please enter a promo code.';
+      msg.className = 'promo-msg error';
+    } else {
+      msg.textContent = 'Invalid code. Try EDIP10 for a discount!';
+      msg.className = 'promo-msg error';
+    }
+  }
+
+  document.getElementById('promoInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyPromo();
+  });
+</script>
+</body>
+</html>
